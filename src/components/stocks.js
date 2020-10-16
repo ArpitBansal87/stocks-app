@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const Stocks = (props) => {
   const classes = useStyles();
   const handleTradeToggle = () => {
-    console.log("test");
+    props.selectChart(props.data.name)
   };
 
   return (

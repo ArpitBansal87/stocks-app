@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Stocks from "./components/stocks";
+import Chart from "./components/charts";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,8 +25,8 @@ const updateStockMarket = (stockUpdates, stocksListObj) => {
         price: stock[1],
         history:
           currentValue.history.length !== 0
-            ? [...currentValue.history, currentValue.price]
-            : [currentValue.price],
+            ? [...currentValue.history, {price: currentValue.price, time:currentTime}]
+            : [{price: currentValue.price, time:currentTime}],
         name: stock[0],
       });
     } else {
@@ -50,6 +51,7 @@ const ws = new WebSocket(
 function App() {
   const [stocksList, setStocksList] = useState(new Map());
   const [pauseStockUpdate, setPauseStockUpdate] = useState(false);
+  const [chartData, setChartData] = useState([{price: 21, time: new Date()}, {price: 11, time: new Date()}])
 
   useEffect(() => {
     ws.onopen = () => {
@@ -77,6 +79,10 @@ function App() {
     setPauseStockUpdate(!pauseStockUpdate);
   };
 
+  const reloadlChart =(value) => {
+    setChartData(stocksList.get(value).history)
+  }
+
   return (
     <>
       <h2>Stocks App</h2>
@@ -91,11 +97,13 @@ function App() {
               className={classes.stocks}
               key={"stock-" + index}
               data={stockData}
+              selectChart={reloadlChart}
             ></Stocks>
           ))}
         </section>
         <section>
           <div>This space is for chart</div>
+          <Chart data={chartData}></Chart>
         </section>
       </div>
     </>
