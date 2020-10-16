@@ -22,7 +22,6 @@ const Stocks = (props) => {
   const handleTradeToggle = () => {
     console.log("test");
   };
-  console.log(props);
 
   return (
     <div className={classes.root}>
@@ -59,7 +58,7 @@ const Stocks = (props) => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button primary onClick={handleTradeToggle}>
+                <Button onClick={handleTradeToggle}>
                   See chart
                 </Button>
               </Grid>
@@ -68,34 +67,6 @@ const Stocks = (props) => {
         </Grid>
       </Paper>
     </div>
-
-    // <div className={classes.root}>
-    //   <Grid container spacing={3}>
-    //     <Grid item xs={12}>
-    //       <Paper className={classes.paper}>
-    //         <Typography>{props.data.name}</Typography>
-    //       </Paper>
-    //     </Grid>
-    //     <Grid item xs={6}>
-    //       <Paper className={classes.paper}>
-    //         <div>{props.data.price}</div>
-    //         <Typography>{props.data.change}</Typography>
-    //       </Paper>
-    //     </Grid>
-    //     <Grid item xs={6}>
-    //       <Paper className={classes.paper}>
-    //         <Typography>{props.data.updatedTimeStamp.toString()}</Typography>
-    //       </Paper>
-    //     </Grid>
-    //     <Grid item xs={3}>
-    //       <Paper className={classes.paper}>
-    //         <Button primary onClick={handleTradeToggle}>
-    //           See chart
-    //         </Button>
-    //       </Paper>
-    //     </Grid>
-    //   </Grid>
-    // </div>
   );
 };
 
