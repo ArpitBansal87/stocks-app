@@ -8,8 +8,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   stocks: {
-    paddingBottom: 10
-  }
+    paddingBottom: 10,
+  },
 }));
 
 const updateStockMarket = (stockUpdates, stocksListObj) => {
@@ -38,23 +38,22 @@ const updateStockMarket = (stockUpdates, stocksListObj) => {
       });
     }
   }
+
   console.log(stocksListObj);
   return stocksListObj;
 };
+const ws = new WebSocket(
+  process.env.NODE_ENV === "production"
+    ? "wss://stocks.mnet.website"
+    : "ws://stocks.mnet.website"
+);
 function App() {
   const [stocksList, setStocksList] = useState(new Map());
+  const [pauseStockUpdate, setPauseStockUpdate] = useState(false);
 
   useEffect(() => {
-    const updateStocksListing = (updateStocks) => {
-      return updateStockMarket(updateStocks, stocksList);
-    };
-
-    const ws = new WebSocket(process.env.NODE_ENV === 'production' ? "wss://stocks.mnet.website" : "ws://stocks.mnet.website");
     ws.onopen = () => {
       console.log("connection Established");
-    };
-    ws.onmessage = (message) => {
-      setStocksList(new Map(updateStocksListing(message.data)));
     };
 
     return function cleanup() {
@@ -63,18 +62,36 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("pauseStockUpdate");
+    ws.onmessage = (message) => {
+      if (!pauseStockUpdate) {
+        setStocksList(new Map(updateStockMarket(message.data, stocksList)));
+      }
+    };
+  }, [pauseStockUpdate, stocksList]);
+
   const classes = useStyles();
+
+  const handlePause = () => {
+    setPauseStockUpdate(!pauseStockUpdate);
+  };
 
   return (
     <>
       <h2>Stocks App</h2>
       <div>Inside the Stocks</div>
+      <button onClick={handlePause}>Pause Stock updates</button>
       <div
         style={{ display: "grid", gridTemplateColumns: "25% auto", gap: "20" }}
       >
         <section className={classes.root}>
           {[...stocksList.values()].map((stockData, index) => (
-            <Stocks className={classes.stocks} key={"stock-" + index} data={stockData}></Stocks>
+            <Stocks
+              className={classes.stocks}
+              key={"stock-" + index}
+              data={stockData}
+            ></Stocks>
           ))}
         </section>
         <section>
