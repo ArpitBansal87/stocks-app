@@ -49,7 +49,7 @@ function App() {
       return updateStockMarket(updateStocks, stocksList);
     };
 
-    const ws = new WebSocket(process.env.NODE_ENV === 'production' ? "ws://stocks.mnet.website" : "ws://stocks.mnet.website");
+    const ws = new WebSocket(process.env.NODE_ENV === 'production' ? "wss://stocks.mnet.website" : "ws://stocks.mnet.website");
     ws.onopen = () => {
       console.log("connection Established");
     };
