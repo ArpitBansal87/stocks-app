@@ -3,7 +3,8 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
+import { Tooltip, Typography } from "@material-ui/core";
+import ShowChartIcon from "@material-ui/icons/ShowChart";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,12 +16,26 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: 500,
   },
+  decrease: {
+    color: "darkgreen",
+  },
+  increase: {
+    color: "red",
+  },
 }));
 
 const Stocks = (props) => {
   const classes = useStyles();
-  const handleTradeToggle = () => {
-    props.selectChart(props.data.name)
+  const handleChartToggle = () => {
+    props.selectChart(props.data.name);
+  };
+
+  const getClassName = () => {
+    return props.data.change === 0
+      ? classes.noChange
+      : props.data.change > 0
+      ? classes.increase
+      : classes.decrease;
   };
 
   return (
@@ -28,13 +43,20 @@ const Stocks = (props) => {
       <Paper className={classes.paper}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm container>
-            <Grid item xs container direction="row" spacing={2}>
+            <Grid
+              item
+              xs
+              container
+              direction="row"
+              spacing={2}
+              alignItems="center"
+            >
               <Grid item container direction="column" xs>
                 <Grid item>
                   <Typography variant="h5">{props.data.name}</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="caption">
+                  <Typography variant="caption" className={getClassName()}>
                     Price: ${Number.parseFloat(props.data.price).toFixed(3)}
                   </Typography>
                 </Grid>
@@ -58,9 +80,14 @@ const Stocks = (props) => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button onClick={handleTradeToggle}>
-                  See chart
-                </Button>
+                <Tooltip title="Show chart">
+                  <Button
+                    onClick={handleChartToggle}
+                    className={getClassName()}
+                  >
+                    <ShowChartIcon></ShowChartIcon>
+                  </Button>
+                </Tooltip>
               </Grid>
             </Grid>
           </Grid>
