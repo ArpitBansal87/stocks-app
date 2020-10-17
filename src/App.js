@@ -3,10 +3,17 @@ import "./App.css";
 import Stocks from "./components/stocks";
 import Chart from "./components/charts";
 import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
+import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  stocksList: {
     flexGrow: 1,
+    overflowY: "scroll",
+    height: "calc(100vh)",
+    padding: "0 10px",
   },
   stocks: {
     paddingBottom: 10,
@@ -25,8 +32,8 @@ const updateStockMarket = (stockUpdates, stocksListObj) => {
         price: stock[1],
         history:
           currentValue.history.length !== 0
-            ? [...currentValue.history, {price: currentValue.price, time:currentTime}]
-            : [{price: currentValue.price, time:currentTime}],
+            ? [...currentValue.history, { price: stock[1], time: currentTime }]
+            : [{ price: currentValue.price, time: currentTime }],
         name: stock[0],
       });
     } else {
@@ -34,24 +41,23 @@ const updateStockMarket = (stockUpdates, stocksListObj) => {
         updatedTimeStamp: currentTime,
         change: 0,
         price: stock[1],
-        history: [],
+        history: [{ price: stock[1], time: currentTime }],
         name: stock[0],
       });
     }
   }
-
-  console.log(stocksListObj);
   return stocksListObj;
 };
 const ws = new WebSocket(
   process.env.NODE_ENV === "production"
-    ? "wss://stocks.mnet.website"
+    ? "wss://trades-api.herokuapp.com/stocks"
     : "ws://stocks.mnet.website"
 );
 function App() {
   const [stocksList, setStocksList] = useState(new Map());
   const [pauseStockUpdate, setPauseStockUpdate] = useState(false);
-  const [chartData, setChartData] = useState([{price: 21, time: new Date()}, {price: 11, time: new Date()}])
+  const [chartData, setChartData] = useState([]);
+  const [chartName, setChartName] = useState("");
 
   useEffect(() => {
     ws.onopen = () => {
@@ -65,7 +71,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("pauseStockUpdate");
     ws.onmessage = (message) => {
       if (!pauseStockUpdate) {
         setStocksList(new Map(updateStockMarket(message.data, stocksList)));
@@ -79,33 +84,58 @@ function App() {
     setPauseStockUpdate(!pauseStockUpdate);
   };
 
-  const reloadlChart =(value) => {
-    setChartData(stocksList.get(value).history)
-  }
+  const reloadlChart = (value) => {
+    setChartData(stocksList.get(value).history);
+    setChartName(stocksList.get(value).name);
+  };
 
   return (
     <>
-      <h2>Stocks App</h2>
-      <div>Inside the Stocks</div>
-      <button onClick={handlePause}>Pause Stock updates</button>
-      <div
-        style={{ display: "grid", gridTemplateColumns: "25% auto", gap: "20" }}
-      >
-        <section className={classes.root}>
-          {[...stocksList.values()].map((stockData, index) => (
-            <Stocks
-              className={classes.stocks}
-              key={"stock-" + index}
-              data={stockData}
-              selectChart={reloadlChart}
-            ></Stocks>
-          ))}
-        </section>
-        <section>
-          <div>This space is for chart</div>
-          <Chart data={chartData}></Chart>
-        </section>
-      </div>
+      <section>
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="center"
+        >
+          <Grid item xs={9} sm={8} lg={3}>
+            <h1>Stocks App</h1>
+          </Grid>
+          <Grid item>
+            <IconButton
+              color="primary"
+              aria-label="play"
+              style={{ float: "right" }}
+              onClick={handlePause}
+            >
+              {pauseStockUpdate ? (
+                <PlayCircleFilledIcon fontSize="large" />
+              ) : (
+                <PauseCircleFilledIcon fontSize="large" />
+              )}
+            </IconButton>
+          </Grid>
+        </Grid>
+      </section>
+      <Grid container>
+        <Grid item xs={12} md={3}>
+          <section className={classes.stocksList}>
+            {[...stocksList.values()].map((stockData, index) => (
+              <Stocks
+                className={classes.stocks}
+                key={"stock-" + index}
+                data={stockData}
+                selectChart={reloadlChart}
+              ></Stocks>
+            ))}
+          </section>
+        </Grid>
+        <Grid item xs={12} md={9}>
+          <section>
+            <Chart data={chartData} name={chartName}></Chart>
+          </section>
+        </Grid>
+      </Grid>
     </>
   );
 }
