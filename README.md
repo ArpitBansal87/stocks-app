@@ -19,9 +19,8 @@ An app to show all the stocks currenlty listed. History of the stocks being show
 
 ## 🔜 TODO
 
-- [] Re-evaluate the data when the instances of changes are huge. 
-- [] Zoom for chart
-- []
+- Re-evaluate the data when the instances of changes are huge. 
+- Zoom for chart
 
 ## 🔗 API return format
 
