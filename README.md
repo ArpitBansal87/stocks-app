@@ -4,11 +4,11 @@ An app to show all the stocks currenlty listed. History of the stocks being show
 
 ![](Stocks_app.JPG)
 
-## Project Demo
+## 🖥️ Project Demo
 
 ![](Stocks_app_view.gif)
 
-## Features
+## 📋 Features
 
 - [x] Listing of Stocks to be recievd from ws://stocks.mnet.website using middleware server.
 - [x] Chart for the history of the stock to show value
@@ -17,13 +17,13 @@ An app to show all the stocks currenlty listed. History of the stocks being show
 - [x] Indicator to show increase/decrease in stock value
 - [x] UI features Eg. tooltips
 
-## TODO
+## 🔜 TODO
 
 - [] Re-evaluate the data when the instances of changes are huge. 
 - [] Zoom for chart
 - []
 
-## API return format
+## 🔗 API return format
 
 ```
 
@@ -43,7 +43,7 @@ Examlpe of the data
 
 ```
 
-## Build with
+## 🛠️ Build with
 
 This section should list any major frameworks that you built your project using.
 
@@ -62,11 +62,11 @@ $ yarn start / npm run start
 
 ```
 
-## 🤝&nbsp; Found a bug? Missing a specific feature?
+## ⚠️&nbsp; Found a bug? Missing a specific feature?
 
 Feel free to **file a new issue** with a respective title and description on the the [Stocks App](https://github.com/ArpitBansal87/stocks-app/issues) repository. If you already found a solution to your problem, **we would love to review your pull request**! 
 
-## Contributions
+## 🤝&nbsp; Contributions
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
